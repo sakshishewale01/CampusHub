@@ -37,16 +37,7 @@ CampusHub/
 | `css/style.css` | All styling for every page — layout (Flexbox & Grid), colors, typography, buttons, cards, forms, navbar, hover effects, and responsive media queries. |
 | `images/` | Placeholder folder for local images (the project currently uses public Unsplash image URLs, so no local images are required). |
 
-## ▶️ How to Run
 
-No build tools, servers, or installations are required.
-
-1. Download / clone this folder.
-2. Double-click `index.html` (or open it with **File → Open** in any browser).
-3. Navigate the site using the navbar links — all pages are linked to each other.
-
-> Note: An internet connection is needed only to load the placeholder images
-> from Unsplash. All layout and styling works fully offline.
 
 ## 🎨 Design & Tech Notes
 
@@ -58,13 +49,6 @@ No build tools, servers, or installations are required.
   to give it a modern, professional look.
 - Login and Register forms are **static UI only** — they do not submit data
   anywhere, since this is a front-end-only activity with no backend.
-
-## 🚫 What's Intentionally Not Included
-
-- No JavaScript
-- No React / Bootstrap / Tailwind CSS or any other framework
-- No Node.js, servers, APIs, or databases
-- No working authentication — forms are for UI demonstration only
 
 ---
 Built for the Web Technology Lab — Activity 1.
