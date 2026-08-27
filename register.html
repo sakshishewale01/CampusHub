@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | CampusHub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <header>
+    <nav class="navbar">
+      <div class="container">
+        <a href="index.html" class="logo">
+          <span class="logo-badge">CH</span>
+          Campus<span>Hub</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+        <div class="nav-cta">
+          <a href="register.html" class="btn btn-primary btn-small">Sign Up</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ REGISTER FORM SECTION ============ -->
+    <section class="auth-section">
+      <div class="auth-card">
+        <a href="index.html" class="logo">
+          <span class="logo-badge">CH</span>
+          Campus<span>Hub</span>
+        </a>
+        <div class="auth-header">
+          <h1>Create Your Account</h1>
+          <p>Join CampusHub to discover and register for college events.</p>
+        </div>
+
+        <!-- Static form: does not submit to a server -->
+        <form action="#">
+          <div class="form-group">
+            <label for="fullname">Full Name</label>
+            <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@college.edu" required>
+          </div>
+
+          <div class="form-group">
+            <label for="collegeid">College ID</label>
+            <input type="text" id="collegeid" name="collegeid" placeholder="e.g. CS2026045" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" placeholder="Create a password" required>
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">Confirm Password</label>
+              <input type="password" id="confirm-password" name="confirm-password" placeholder="Re-enter password" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+
+        <div class="auth-divider">Already a member</div>
+
+        <p class="auth-footer-text">
+          Already have an account? <a href="login.html">Login here</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 CampusHub. Built as a Web Technology Lab Activity. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

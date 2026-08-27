@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | CampusHub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <header>
+    <nav class="navbar">
+      <div class="container">
+        <a href="index.html" class="logo">
+          <span class="logo-badge">CH</span>
+          Campus<span>Hub</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="login.html" class="active">Login</a></li>
+        </ul>
+        <div class="nav-cta">
+          <a href="register.html" class="btn btn-primary btn-small">Sign Up</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ LOGIN FORM SECTION ============ -->
+    <section class="auth-section">
+      <div class="auth-card">
+        <a href="index.html" class="logo">
+          <span class="logo-badge">CH</span>
+          Campus<span>Hub</span>
+        </a>
+        <div class="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Log in to register for events and manage your participation.</p>
+        </div>
+
+        <!-- Static form: does not submit to a server -->
+        <form action="#">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@college.edu" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+          </div>
+
+          <div class="form-options">
+            <div class="checkbox-group">
+              <input type="checkbox" id="remember" name="remember">
+              <label for="remember">Remember me</label>
+            </div>
+            <a href="#" class="forgot-link">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+
+        <div class="auth-divider">New to CampusHub</div>
+
+        <p class="auth-footer-text">
+          Don't have an account? <a href="register.html">Register here</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 CampusHub. Built as a Web Technology Lab Activity. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
