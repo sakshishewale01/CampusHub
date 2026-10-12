@@ -1,0 +1,19 @@
+{
+  "name": "campushub",
+  "version": "1.0.0",
+  "description": "CampusHub - College Event Management Platform with Node.js Server-Side Validation",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js"
+  },
+  "keywords": [
+    "campushub",
+    "college-events",
+    "node-http",
+    "server-side-validation",
+    "vanilla-javascript"
+  ],
+  "author": "Sakshi Shewale",
+  "license": "MIT"
+}

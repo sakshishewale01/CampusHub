@@ -1,19 +1,20 @@
 // ========================================================
-// CampusHub - Registration Form & Storage (Assignment 2)
-// Requirements:
-// 1. Validate all inputs before saving.
-// 2. Prevent invalid or duplicate data from being stored.
-// 3. Store valid registrations in an Array named 'registrations'.
-// 4. Convert Array to JSON using JSON.stringify() and save to localStorage.
-// 5. Read JSON using JSON.parse() on page load to restore stored records.
-// 6. Demonstrate stored data dynamically on the page.
-// Note: Passwords are only checked for validation and never stored.
+// CampusHub - Registration Form (Assignment 3)
+// Connected to Node.js HTTP Server for Server-Side Validation.
+// Features:
+// 1. Client-side validation for instant UX feedback.
+// 2. Submits payload to Node.js backend: POST /api/register.
+// 3. Server independently re-validates all inputs.
+// 4. Server checks duplicates, hashes password with crypto,
+//    and saves records to server/data/registrations.json.
+// 5. Displays server response (201 Created, 400 Bad Request, 409 Conflict).
+// 6. Synchronizes registered events with the server.
 // ========================================================
 
 // 1. Global Array to store registration objects
 let registrations = [];
 
-// localStorage key name for JSON storage
+// localStorage key name for client-side persistence fallback
 const STORAGE_KEY = "campushub_registrations";
 
 // 2. DOM Elements
@@ -45,13 +46,12 @@ function clearMessage() {
 }
 
 // 5. Render Stored Registrations to the DOM
-// Demonstrates that data in the 'registrations' Array is stored and accessible
 function renderRegistrations() {
   if (!regList) return;
 
   // Update count badge
   if (regBadge) {
-    regBadge.textContent = registrations.length + (registrations.length === 1 ? " saved" : " saved");
+    regBadge.textContent = registrations.length + " saved";
   }
 
   // If array is empty, display placeholder text
@@ -76,12 +76,12 @@ function renderRegistrations() {
   regList.innerHTML = html;
 }
 
-// 6. Load saved registrations from localStorage using JSON.parse()
+// 6. Load saved registrations (sync with server and localStorage fallback)
 function loadRegistrations() {
+  // First load from localStorage for immediate display
   try {
     const storedData = localStorage.getItem(STORAGE_KEY);
     if (storedData) {
-      // Convert stored JSON string back into a JavaScript Array of objects
       registrations = JSON.parse(storedData);
       if (!Array.isArray(registrations)) {
         registrations = [];
@@ -90,18 +90,42 @@ function loadRegistrations() {
       registrations = [];
     }
   } catch (error) {
-    console.error("Error parsing stored JSON data:", error);
     registrations = [];
   }
-
-  // Display loaded data in the DOM preview
   renderRegistrations();
+
+  // Next, fetch latest validated registrations from Node.js server
+  fetch('/api/registrations')
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+      throw new Error('Server not available');
+    })
+    .then(function (data) {
+      if (data && Array.isArray(data.registrations)) {
+        registrations = data.registrations.map(function (item) {
+          return {
+            id: item.id,
+            studentName: item.fullName || item.studentName,
+            email: item.email,
+            collegeId: item.collegeId,
+            selectedEvent: item.selectedEvent,
+            registrationDate: item.registrationDate
+          };
+        });
+        saveRegistrations();
+        renderRegistrations();
+      }
+    })
+    .catch(function () {
+      // Server not connected (e.g. running statically); localStorage remains active
+    });
 }
 
-// 7. Save registrations array to localStorage using JSON.stringify()
+// 7. Save registrations array to localStorage
 function saveRegistrations() {
   try {
-    // Convert JavaScript Array into a JSON formatted string
     const jsonString = JSON.stringify(registrations);
     localStorage.setItem(STORAGE_KEY, jsonString);
   } catch (error) {
@@ -132,7 +156,7 @@ function checkUrlEventParam() {
   }
 });
 
-// 10. Form Submit Event Handler (Validation -> Array Push -> JSON Conversion -> Storage)
+// 10. Form Submit Event Handler (Client validation -> Node.js POST -> Server validation)
 registerForm.addEventListener("submit", function (event) {
   // Prevent page refresh on form submission
   event.preventDefault();
@@ -144,12 +168,11 @@ registerForm.addEventListener("submit", function (event) {
   const password = passwordInput.value;
   const confirmPassword = confirmPasswordInput.value;
 
-  // Regular expression to check standard email structure (e.g. user@domain.ext)
+  // Regular expression to check standard email structure
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  // ---------- VALIDATION CHECKS BEFORE SAVING ----------
+  // ---------- STEP A: BASIC CLIENT-SIDE VALIDATION ----------
 
-  // 1. Validate Student Name
   if (!studentName) {
     showRegisterMessage("Please enter your full name.", "error");
     fullNameInput.focus();
@@ -161,7 +184,6 @@ registerForm.addEventListener("submit", function (event) {
     return;
   }
 
-  // 2. Validate Email Address
   if (!email) {
     showRegisterMessage("Please enter your email address.", "error");
     emailInput.focus();
@@ -173,33 +195,29 @@ registerForm.addEventListener("submit", function (event) {
     return;
   }
 
-  // 3. Validate College ID
   if (!collegeId) {
     showRegisterMessage("Please enter your College ID.", "error");
     collegeIdInput.focus();
     return;
   }
 
-  // 4. Validate Event Selection
   if (!selectedEvent) {
     showRegisterMessage("Please select an event to register for.", "error");
     eventSelect.focus();
     return;
   }
 
-  // 5. Validate Password
   if (!password) {
     showRegisterMessage("Please enter a password.", "error");
     passwordInput.focus();
     return;
   }
-  if (password.length < 6) {
-    showRegisterMessage("Password must contain at least 6 characters.", "error");
+  if (password.length < 8) {
+    showRegisterMessage("Password must contain at least 8 characters.", "error");
     passwordInput.focus();
     return;
   }
 
-  // 6. Validate Confirm Password & Match
   if (!confirmPassword) {
     showRegisterMessage("Please confirm your password.", "error");
     confirmPasswordInput.focus();
@@ -211,49 +229,85 @@ registerForm.addEventListener("submit", function (event) {
     return;
   }
 
-  // 7. Prevent Duplicate Registration (same student email for the same event)
-  const isDuplicate = registrations.some(function (reg) {
-    return reg.email.toLowerCase() === email.toLowerCase() && reg.selectedEvent === selectedEvent;
-  });
+  // ---------- STEP B: SEND DATA TO NODE.JS SERVER (SERVER-SIDE VALIDATION) ----------
 
-  if (isDuplicate) {
-    showRegisterMessage("You have already registered for \"" + selectedEvent + "\" with this email address.", "error");
-    emailInput.focus();
-    return;
+  const submitBtn = registerForm.querySelector('button[type="submit"]');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Validating on Server...";
   }
 
-  // ---------- DATA IS VALID -> CREATE OBJECT, ADD TO ARRAY, CONVERT TO JSON ----------
-
-  // Format today's date (e.g. "13 Oct 2026")
-  const today = new Date();
-  const dateFormatted = today.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric"
-  });
-
-  // Create the registration object (NOTE: Passwords are NOT saved for privacy and security)
-  const registrationRecord = {
-    id: Date.now(),
-    studentName: studentName,
+  // Create payload for Node.js server
+  const registrationPayload = {
+    fullName: studentName,
     email: email,
     collegeId: collegeId,
     selectedEvent: selectedEvent,
-    registrationDate: dateFormatted
+    password: password,
+    confirmPassword: confirmPassword
   };
 
-  // Step 1: Add new registration object to the JavaScript Array using push()
-  registrations.push(registrationRecord);
+  fetch('/api/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(registrationPayload)
+  })
+    .then(function (response) {
+      return response.json().then(function (data) {
+        return {
+          status: response.status,
+          ok: response.ok,
+          data: data
+        };
+      });
+    })
+    .then(function (result) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Register for Event";
+      }
 
-  // Step 2: Convert Array into JSON string using JSON.stringify() and save to localStorage
-  saveRegistrations();
+      if (result.ok) {
+        // Status 201 Created: Server accepted and saved the registration
+        showRegisterMessage(result.data.message || "Registration successful! Record validated on server.", "success");
+        registerForm.reset();
 
-  // Step 3: Update DOM preview to display newly saved registration
-  renderRegistrations();
+        // Update local registrations list with sanitized server data
+        const savedRecord = result.data.registration || {
+          id: Date.now(),
+          studentName: studentName,
+          email: email,
+          collegeId: collegeId,
+          selectedEvent: selectedEvent,
+          registrationDate: new Date().toLocaleDateString("en-GB")
+        };
 
-  // Step 4: Show success confirmation message and reset form fields
-  showRegisterMessage("Registration successful for \"" + selectedEvent + "\"! Data validated and saved to JSON array.", "success");
-  registerForm.reset();
+        registrations.push({
+          id: savedRecord.id,
+          studentName: savedRecord.fullName || studentName,
+          email: savedRecord.email || email,
+          collegeId: savedRecord.collegeId || collegeId,
+          selectedEvent: savedRecord.selectedEvent || selectedEvent,
+          registrationDate: savedRecord.registrationDate || new Date().toLocaleDateString("en-GB")
+        });
+
+        saveRegistrations();
+        renderRegistrations();
+      } else {
+        // Status 400 Bad Request or 409 Conflict: Server rejected registration
+        showRegisterMessage(result.data.message || "Server validation error. Please check your input.", "error");
+      }
+    })
+    .catch(function (networkError) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Register for Event";
+      }
+      console.warn("Server connection notice:", networkError);
+      showRegisterMessage("Unable to reach the Node.js server at /api/register. Please verify server.js is running.", "error");
+    });
 });
 
 // 11. Initial setup when page loads
