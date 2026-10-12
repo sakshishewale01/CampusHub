@@ -35,6 +35,7 @@ CampusHub/
 
 | File | Purpose |
 |------|---------|
+<<<<<<< HEAD
 | `index.html` | Landing page with navigation bar, hero banner, featured events highlights, category cards, key statistics, call-to-action, and footer. |
 | `events.html` | Events listing page with real-time search, category filter chips, sorting dropdown, live counter, and interactive event details modal. |
 | `login.html` | Student login page featuring client-side required field and email format validation with dynamic error/success feedback. |
@@ -44,6 +45,28 @@ CampusHub/
 | `js/events.js` | JavaScript module for live search by name/description, category filtering, sorting by date or name, event counting, and modal popup handling. |
 | `js/login.js` | JavaScript module validating login inputs and displaying real-time feedback without page reloading. |
 | `js/register.js` | JavaScript module validating registration fields, password rules, and password confirmation. |
+=======
+| `index.html` | Landing page with navbar, hero section, featured events, categories, statistics, call-to-action and footer. |
+| `events.html` | Full events listing page with a static search bar, category filter chips, and a grid of event cards. |
+| `login.html` | Login form UI with email, password, "remember me", "forgot password" link and a link to register. |
+| `register.html` | Registration form UI with full name, email, college ID, password, confirm password fields and a link to login. |
+| `about.html` | Explains what CampusHub is, its purpose, feature highlights, and a "How it Works" step-by-step section. |
+| `css/style.css` | All styling for every page — layout (Flexbox & Grid), colors, typography, buttons, cards, forms, navbar, hover effects, and responsive media queries. |
+| `images/` | Placeholder folder for local images (the project currently uses public Unsplash image URLs, so no local images are required). |
+
+
+
+## 🎨 Design & Tech Notes
+
+- Built with **semantic HTML5** (`header`, `nav`, `main`, `section`, `article`, `footer`).
+- Styled entirely with **CSS3** — Flexbox for navigation/alignment, CSS Grid for
+  card layouts, custom properties (`:root` variables) for a consistent theme.
+- Fully **responsive** with media queries for tablet and mobile breakpoints.
+- Includes hover effects, card shadows, rounded corners, and consistent spacing
+  to give it a modern, professional look.
+- Login and Register forms are **static UI only** — they do not submit data
+  anywhere, since this is a front-end-only activity with no backend.
+>>>>>>> 9c29345e74726a921e82c45e68459d6070b288e4
 
 ---
 
