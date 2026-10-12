@@ -1,9 +1,4 @@
-/* =========================================================
-   CampusHub - Main Stylesheet
-   Web Technology Lab Activity - Pure HTML5 + CSS3
-   ========================================================= */
 
-/* ---------- CSS Reset / Base ---------- */
 * {
   margin: 0;
   padding: 0;
@@ -653,6 +648,20 @@ section {
   cursor: pointer;
 }
 
+.event-count {
+  color: var(--text-light);
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.no-results {
+  display: none;
+  color: var(--text-light);
+  text-align: center;
+  padding: 32px 0 8px;
+}
+
 /* ---------- Forms (Login / Register) ---------- */
 .auth-section {
   padding: 80px 0;
@@ -702,7 +711,8 @@ section {
   color: var(--text-main);
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 12px 16px;
   border: 1px solid var(--border-color);
@@ -713,7 +723,8 @@ section {
   transition: var(--transition);
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
   border-color: var(--primary);
   background: #fff;
@@ -789,6 +800,107 @@ section {
   flex: 1;
   height: 1px;
   background: var(--border-color);
+}
+
+.form-message {
+  display: none;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.form-message.error {
+  display: block;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.form-message.success {
+  display: block;
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+/* ---------- Registrations Preview (JSON & Array Demo) ---------- */
+.registrations-box {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border-color);
+}
+
+.registrations-box h3 {
+  font-size: 0.98rem;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--dark);
+}
+
+.registrations-box .badge {
+  background: rgba(79, 70, 229, 0.12);
+  color: var(--primary);
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.reg-empty {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  text-align: center;
+  padding: 12px 0;
+  font-style: italic;
+}
+
+.reg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.reg-item {
+  background: var(--bg-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.reg-item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.reg-item-info strong {
+  font-size: 0.88rem;
+  color: var(--dark);
+}
+
+.reg-item-info span {
+  font-size: 0.78rem;
+  color: var(--text-light);
+}
+
+.reg-item-tag {
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #a7f3d0;
+  white-space: nowrap;
 }
 
 /* ---------- About Page ---------- */
@@ -915,6 +1027,101 @@ section {
 
 .bg-alt {
   background: #fff;
+}
+
+/* ---------- Event Details Modal ---------- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 27, 46, 0.65);
+  backdrop-filter: blur(4px);
+}
+
+.modal-box {
+  position: relative;
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  z-index: 1001;
+  border: 1px solid var(--border-color);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal-close:hover {
+  color: var(--dark);
+}
+
+.modal-header {
+  margin-bottom: 16px;
+}
+
+.modal-header h2 {
+  margin-top: 10px;
+  font-size: 1.5rem;
+}
+
+.modal-body .event-meta {
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-desc {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.modal-footer {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border-color);
+  padding-top: 18px;
 }
 
 /* =========================================================

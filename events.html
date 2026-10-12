@@ -39,31 +39,32 @@
     </section>
 
     <div class="container">
-      <!-- ============ SEARCH + FILTER BAR (static UI only) ============ -->
-      <form class="filter-bar" action="#">
+      <!-- ============ SEARCH + FILTER BAR ============ -->
+      <form class="filter-bar" id="event-controls" action="#">
         <div class="search-box">
           <span class="icon">🔍</span>
-          <input type="text" placeholder="Search events by name, club or location...">
+          <input type="text" id="event-search" placeholder="Search events by name or description..." aria-label="Search events">
         </div>
-        <div class="filter-chip-group">
-          <button type="button" class="filter-chip active">All</button>
-          <button type="button" class="filter-chip">Technical</button>
-          <button type="button" class="filter-chip">Cultural</button>
-          <button type="button" class="filter-chip">Sports</button>
-          <button type="button" class="filter-chip">Workshops</button>
+        <div class="filter-chip-group" aria-label="Filter events by category">
+          <button type="button" class="filter-chip active" data-category="All">All</button>
+          <button type="button" class="filter-chip" data-category="Technical">Technical</button>
+          <button type="button" class="filter-chip" data-category="Cultural">Cultural</button>
+          <button type="button" class="filter-chip" data-category="Sports">Sports</button>
+          <button type="button" class="filter-chip" data-category="Workshop">Workshops</button>
         </div>
-        <select class="filter-select">
-          <option>Sort by: Date</option>
-          <option>Sort by: Popularity</option>
-          <option>Sort by: Name (A-Z)</option>
+        <select class="filter-select" id="event-sort" aria-label="Sort events">
+          <option value="date">Sort by: Date</option>
+          <option value="name">Sort by: Name (A-Z)</option>
         </select>
       </form>
 
       <!-- ============ EVENTS GRID ============ -->
       <section class="events-list">
+        <p class="event-count" id="event-count" aria-live="polite">Showing 8 of 8 events</p>
+        <p class="no-results" id="no-results" role="status">No matching events found. Try a different search or category.</p>
         <div class="events-grid mt-40">
 
-          <article class="event-card">
+          <article class="event-card" data-category="Technical" data-date="2026-09-12">
             <div class="event-card-img">
               <span class="event-tag">Technical</span>
               <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=500&q=80" alt="Code Sprint Hackathon">
@@ -80,7 +81,7 @@
             </div>
           </article>
 
-          <article class="event-card">
+          <article class="event-card" data-category="Cultural" data-date="2026-09-18">
             <div class="event-card-img">
               <span class="event-tag">Cultural</span>
               <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=500&q=80" alt="Rhythm Night Concert">
@@ -97,7 +98,7 @@
             </div>
           </article>
 
-          <article class="event-card">
+          <article class="event-card" data-category="Sports" data-date="2026-09-22">
             <div class="event-card-img">
               <span class="event-tag">Sports</span>
               <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=500&q=80" alt="Inter College Sports Meet">
@@ -114,7 +115,7 @@
             </div>
           </article>
 
-          <article class="event-card">
+          <article class="event-card" data-category="Workshop" data-date="2026-09-28">
             <div class="event-card-img">
               <span class="event-tag">Workshop</span>
               <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=500&q=80" alt="AI Workshop">
@@ -131,7 +132,7 @@
             </div>
           </article>
 
-          <article class="event-card">
+          <article class="event-card" data-category="Technical" data-date="2026-10-03">
             <div class="event-card-img">
               <span class="event-tag">Technical</span>
               <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80" alt="Robotics Expo">
@@ -148,7 +149,7 @@
             </div>
           </article>
 
-          <article class="event-card">
+          <article class="event-card" data-category="Cultural" data-date="2026-10-06">
             <div class="event-card-img">
               <span class="event-tag">Cultural</span>
               <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=500&q=80" alt="Art & Photography Exhibition">
@@ -165,7 +166,7 @@
             </div>
           </article>
 
-          <article class="event-card">
+          <article class="event-card" data-category="Sports" data-date="2026-10-09">
             <div class="event-card-img">
               <span class="event-tag">Sports</span>
               <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=500&q=80" alt="Basketball Championship">
@@ -182,7 +183,7 @@
             </div>
           </article>
 
-          <article class="event-card">
+          <article class="event-card" data-category="Workshop" data-date="2026-10-14">
             <div class="event-card-img">
               <span class="event-tag">Workshop</span>
               <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=500&q=80" alt="Public Speaking Workshop">
@@ -201,6 +202,28 @@
 
         </div>
       </section>
+    </div>
+
+    <!-- ============ EVENT DETAILS MODAL ============ -->
+    <div class="modal" id="event-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="display: none;">
+      <div class="modal-overlay" id="modal-overlay"></div>
+      <div class="modal-box">
+        <button type="button" class="modal-close" id="modal-close" aria-label="Close dialog">&times;</button>
+        <div class="modal-header">
+          <span class="event-tag" id="modal-category">Technical</span>
+          <h2 id="modal-title">Event Title</h2>
+        </div>
+        <div class="modal-body">
+          <div class="event-meta" id="modal-meta">
+            <!-- Populated by JavaScript -->
+          </div>
+          <p class="modal-desc" id="modal-desc">Event description</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-small" id="modal-close-btn">Close</button>
+          <a href="register.html" class="btn btn-primary btn-small" id="modal-register-btn">Register for Event</a>
+        </div>
+      </div>
     </div>
   </main>
 
@@ -241,5 +264,6 @@
     </div>
   </footer>
 
+  <script src="js/events.js"></script>
 </body>
 </html>

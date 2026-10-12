@@ -42,8 +42,8 @@
           <p>Join CampusHub to discover and register for college events.</p>
         </div>
 
-        <!-- Static form: does not submit to a server -->
-        <form action="#">
+        <!-- JavaScript validates this demo form; no data is sent to a server. -->
+        <form id="register-form" action="#" novalidate>
           <div class="form-group">
             <label for="fullname">Full Name</label>
             <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
@@ -59,6 +59,21 @@
             <input type="text" id="collegeid" name="collegeid" placeholder="e.g. CS2026045" required>
           </div>
 
+          <div class="form-group">
+            <label for="event-select">Select Event</label>
+            <select id="event-select" name="event-select" required>
+              <option value="">-- Choose an Event --</option>
+              <option value="Code Sprint Hackathon">Code Sprint Hackathon (Technical)</option>
+              <option value="Rhythm Night">Rhythm Night (Cultural)</option>
+              <option value="Inter-College Sports Meet">Inter-College Sports Meet (Sports)</option>
+              <option value="AI & Machine Learning Workshop">AI & Machine Learning Workshop (Workshop)</option>
+              <option value="Robotics Expo">Robotics Expo (Technical)</option>
+              <option value="Art & Photography Exhibition">Art & Photography Exhibition (Cultural)</option>
+              <option value="3x3 Basketball Championship">3x3 Basketball Championship (Sports)</option>
+              <option value="Public Speaking Bootcamp">Public Speaking Bootcamp (Workshop)</option>
+            </select>
+          </div>
+
           <div class="form-row">
             <div class="form-group">
               <label for="password">Password</label>
@@ -70,8 +85,20 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-block">Register</button>
+          <button type="submit" class="btn btn-primary btn-block">Register for Event</button>
+          <p class="form-message" id="register-message" role="status" aria-live="polite"></p>
         </form>
+
+        <!-- Dynamic preview demonstrating stored Array/JSON data -->
+        <div class="registrations-box">
+          <h3>
+            Stored Registrations
+            <span class="badge" id="reg-badge">0 saved</span>
+          </h3>
+          <div id="reg-list" class="reg-list">
+            <p class="reg-empty" id="reg-empty">No registrations stored yet. Register for an event above to save data.</p>
+          </div>
+        </div>
 
         <div class="auth-divider">Already a member</div>
 
@@ -91,5 +118,6 @@
     </div>
   </footer>
 
+  <script src="js/register.js"></script>
 </body>
 </html>
