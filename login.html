@@ -42,7 +42,7 @@
           <p>Log in to register for events and manage your participation.</p>
         </div>
 
-        <!-- JavaScript validates this demo form; no data is sent to a server. -->
+        <!-- Validated in the browser, then authenticated by POST /api/login. Admins and users share this form. -->
         <form id="login-form" action="#" novalidate>
           <div class="form-group">
             <label for="email">Email Address</label>
@@ -84,6 +84,7 @@
     </div>
   </footer>
 
+  <script src="js/auth.js"></script>
   <script src="js/login.js"></script>
 </body>
 </html>

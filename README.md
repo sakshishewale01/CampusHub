@@ -8,6 +8,36 @@ CampusHub is a full-featured college event management web application developed 
 
 ---
 
+## 🆕 Admin / User Roles, MongoDB and Excel Export
+
+> The sections below describe the original Assignment 3 JSON-file server. The app now stores everything in **MongoDB** and has two roles. Where they differ, this section is current.
+
+**Roles**
+- **Admin** – logs in at `login.html`, lands on `admin.html`. Creates/edits/deletes events, views and removes registrations, **exports registrations to Excel**, answers or deletes student questions, and creates/deletes admin or user accounts.
+- **User** – signs up at `register.html`, then registers (or cancels) for events and posts questions from the event details popup on `events.html`.
+
+**Run**
+```bash
+npm install
+# MongoDB must be running (default mongodb://127.0.0.1:27017)
+npm start            # http://localhost:3000
+```
+Optional environment variables: `PORT`, `MONGODB_URI`, `MONGODB_DB` (default `campushub`), `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `NODE_ENV=production` (adds the `Secure` cookie flag).
+
+On first start the server seeds the 8 sample events and creates the first admin account. **Change the default password before deploying** (set `ADMIN_EMAIL` / `ADMIN_PASSWORD` before the first start, or create a new admin in the Users tab and delete this one).
+
+| Role  | Email                 | Password      |
+|-------|-----------------------|---------------|
+| Admin | `admin@campushub.edu` | `Admin@12345` |
+
+Users sign up themselves at `register.html`.
+
+**Collections:** `users`, `events`, `registrations` (unique per user + event), `queries`, `sessions` (auto-expire after 8 hours).
+
+**Excel export:** Admin Panel → Registrations → *Export to Excel* (filter by event first to export just one). The workbook is event-wise: **one sheet per event** (Sr No, Full Name, Email, PRN, Registered At). Direct URL: `GET /api/admin/export[?eventId=<id>]`, admin only; downloads an `.xlsx` file.
+
+**API** (`server/api.js`): `POST /api/register|login|logout`, `GET /api/me`, `GET /api/events`, `POST|PUT|DELETE /api/events[/:id]` (admin), `POST|DELETE /api/events/:id/register` (user), `GET|POST /api/events/:id/queries`, and `/api/admin/{registrations,export,queries,users}` (admin).
+
 ## 📁 Project Structure
 
 ```text

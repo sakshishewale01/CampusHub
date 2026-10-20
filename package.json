@@ -15,5 +15,9 @@
     "vanilla-javascript"
   ],
   "author": "Sakshi Shewale",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "mongodb": "^7.7.0"
+  }
 }
