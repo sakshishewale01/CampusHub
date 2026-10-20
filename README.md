@@ -1,10 +1,7 @@
 # CampusHub — College Event Management Platform
 
-CampusHub is a full-featured college event management web application developed as part of the **Web Technology Lab**.
+CampusHub is a full-featured college event management web application.
 
-- **Assignment 1:** Static Web Page Design using **HTML5** and **CSS3**.
-- **Assignment 2:** Dynamic Web Application demonstrating **Vanilla JavaScript** (DOM manipulation, event handling, real-time search, category filters, sorting, array operations, JSON, and localStorage).
-- **Assignment 3:** Server-Side Validation and Storage using pure **Node.js** (built-in `http`, `fs`, `path`, and `crypto` modules without external frameworks).
 
 ---
 
