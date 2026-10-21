@@ -186,4 +186,4 @@ Before any registration record is accepted or saved to `server/data/registration
 
 ---
 
-echnology Lab. All rights reserved.
+
