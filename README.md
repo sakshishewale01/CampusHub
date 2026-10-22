@@ -101,6 +101,53 @@ CampusHub/
 
 ---
 
+## System Design
+
+```mermaid
+flowchart TD
+    U["Students and Visitors"]
+    V["Web Browser"]
+    H["HTML5 Pages"]
+    C["CSS3 Stylesheet"]
+    P["CampusHub Website"]
+
+    U --> V
+    V --> H
+    V --> C
+    H --> P
+    C --> P
+
+    subgraph Pages
+        P1["Home"]
+        P2["Events"]
+        P3["About"]
+        P4["Login"]
+        P5["Register"]
+    end
+
+    P --> P1
+    P --> P2
+    P --> P3
+    P --> P4
+    P --> P5
+```
+
+## Technology Stack
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| Structure | HTML5 | Website content and pages |
+| Styling | CSS3 | Visual design and responsiveness |
+| Layout | Flexbox and CSS Grid | Page and component layout |
+| Responsive Design | CSS Media Queries | Mobile and tablet support |
+| Images | Unsplash image URLs | Website imagery |
+| Version Control | Git and GitHub | Source code management |
+| Deployment | Vercel, if deployed | Static website hosting |
+
+---
+
+
+
 ## 💡 Client-Side vs Server-Side Validation: What is the Difference?
 
 | Feature | Client-Side Validation (Browser) | Server-Side Validation (Node.js) |
