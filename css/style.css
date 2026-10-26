@@ -1212,7 +1212,6 @@ section {
   }
 }
 
-<<<<<<< HEAD
 /* ========================================================
    CampusHub 2.0 - Dashboard & Advanced Management Styles
    ======================================================== */
@@ -1366,7 +1365,10 @@ section {
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 700;
-=======
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 /* =========================================================
    Auth-aware navbar, event registration and Q&A
    ========================================================= */
@@ -1389,12 +1391,8 @@ section {
   background: var(--bg-light);
   color: var(--primary);
   font-size: 0.7rem;
->>>>>>> 60de5dab5c216d2aad9cf4195abb3abbe07d0ba3
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
-<<<<<<< HEAD
 .badge-status.confirmed,
 .badge-status.upcoming {
   background: #dcfce7;
@@ -1627,7 +1625,7 @@ section {
     opacity: 1;
   }
 }
-=======
+
 .registered-badge {
   display: inline-block;
   margin-bottom: 10px;
@@ -1961,4 +1959,3 @@ section {
   opacity: 0.6;
   cursor: not-allowed;
 }
->>>>>>> 60de5dab5c216d2aad9cf4195abb3abbe07d0ba3
