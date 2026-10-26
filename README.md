@@ -1,5 +1,6 @@
 # CampusHub 3.0 — Complete MERN Stack Project
 
+<<<<<<< HEAD
 A modern, responsive, full-stack college event management web application built using the complete **MERN Stack** (**M**ongoDB Atlas, **E**xpress.js, **R**eact.js, and **N**ode.js).
 
 Designed for the **Web Technology Laboratory (Third Year Computer Engineering)**, CampusHub enables students to discover campus events, register in real-time, view remaining seat capacities, and manage their participation, while providing college administrators with a dedicated control panel to create, edit, and supervise events and student registrations.
@@ -84,6 +85,44 @@ In universities and colleges:
 ---
 
 ## 5. Project Folder Structure
+=======
+CampusHub is a full-featured college event management web application.
+
+
+---
+
+## 🆕 Admin / User Roles, MongoDB and Excel Export
+
+> The sections below describe the original Assignment 3 JSON-file server. The app now stores everything in **MongoDB** and has two roles. Where they differ, this section is current.
+
+**Roles**
+- **Admin** – logs in at `login.html`, lands on `admin.html`. Creates/edits/deletes events, views and removes registrations, **exports registrations to Excel**, answers or deletes student questions, and creates/deletes admin or user accounts.
+- **User** – signs up at `register.html`, then registers (or cancels) for events and posts questions from the event details popup on `events.html`.
+
+**Run**
+```bash
+npm install
+# MongoDB must be running (default mongodb://127.0.0.1:27017)
+npm start            # http://localhost:3000
+```
+Optional environment variables: `PORT`, `MONGODB_URI`, `MONGODB_DB` (default `campushub`), `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `NODE_ENV=production` (adds the `Secure` cookie flag).
+
+On first start the server seeds the 8 sample events and creates the first admin account. **Change the default password before deploying** (set `ADMIN_EMAIL` / `ADMIN_PASSWORD` before the first start, or create a new admin in the Users tab and delete this one).
+
+| Role  | Email                 | Password      |
+|-------|-----------------------|---------------|
+| Admin | `admin@campushub.edu` | `Admin@12345` |
+
+Users sign up themselves at `register.html`.
+
+**Collections:** `users`, `events`, `registrations` (unique per user + event), `queries`, `sessions` (auto-expire after 8 hours).
+
+**Excel export:** Admin Panel → Registrations → *Export to Excel* (filter by event first to export just one). The workbook is event-wise: **one sheet per event** (Sr No, Full Name, Email, PRN, Registered At). Direct URL: `GET /api/admin/export[?eventId=<id>]`, admin only; downloads an `.xlsx` file.
+
+**API** (`server/api.js`): `POST /api/register|login|logout`, `GET /api/me`, `GET /api/events`, `POST|PUT|DELETE /api/events[/:id]` (admin), `POST|DELETE /api/events/:id/register` (user), `GET|POST /api/events/:id/queries`, and `/api/admin/{registrations,export,queries,users}` (admin).
+
+## 📁 Project Structure
+>>>>>>> 60de5dab5c216d2aad9cf4195abb3abbe07d0ba3
 
 ```text
 CampusHub/
@@ -218,7 +257,58 @@ Vite automatically proxies all `/api/*` calls to the Express backend!
 
 ---
 
+<<<<<<< HEAD
 ## 8. How to Configure MongoDB Atlas
+=======
+## System Design
+
+```mermaid
+flowchart TD
+    U["Students and Visitors"]
+    V["Web Browser"]
+    H["HTML5 Pages"]
+    C["CSS3 Stylesheet"]
+    P["CampusHub Website"]
+
+    U --> V
+    V --> H
+    V --> C
+    H --> P
+    C --> P
+
+    subgraph Pages
+        P1["Home"]
+        P2["Events"]
+        P3["About"]
+        P4["Login"]
+        P5["Register"]
+    end
+
+    P --> P1
+    P --> P2
+    P --> P3
+    P --> P4
+    P --> P5
+```
+
+## Technology Stack
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| Structure | HTML5 | Website content and pages |
+| Styling | CSS3 | Visual design and responsiveness |
+| Layout | Flexbox and CSS Grid | Page and component layout |
+| Responsive Design | CSS Media Queries | Mobile and tablet support |
+| Images | Unsplash image URLs | Website imagery |
+| Version Control | Git and GitHub | Source code management |
+| Deployment | Vercel, if deployed | Static website hosting |
+
+---
+
+
+
+## 💡 Client-Side vs Server-Side Validation: What is the Difference?
+>>>>>>> 60de5dab5c216d2aad9cf4195abb3abbe07d0ba3
 
 1. **Create an Account:** Go to [mongodb.com/atlas](https://www.mongodb.com/atlas) and register for a free account.
 2. **Create a Free Cluster:** Select **M0 Free Tier** (AWS or Google Cloud provider) and click **Create Cluster**.
@@ -372,6 +462,7 @@ On initial startup, `server/config/db.js` automatically creates initial accounts
      - `req.session.regenerate()`: Invoked on login to prevent Session Fixation attacks.
      - `req.session.destroy()`: Destroys session upon logout.
 
+<<<<<<< HEAD
 ---
 
 ## 15. How React Communicates with Express & MongoDB
@@ -387,6 +478,8 @@ On initial startup, `server/config/db.js` automatically creates initial accounts
 6. **MongoDB Response:** MongoDB Atlas returns document results to Mongoose.
 7. **JSON Response:** Express responds with `{ success: true, message: 'Successfully registered!' }`.
 8. **React State Update:** The component triggers a state update (`useState`), showing a toast and updating the seat count without a full page refresh.
+=======
+>>>>>>> 60de5dab5c216d2aad9cf4195abb3abbe07d0ba3
 
 ---
 
@@ -401,6 +494,7 @@ CampusHub 3.0 is deployment-ready as a single web service on **Render**:
    git commit -m "Deploy CampusHub 3.0 MERN stack application"
    git push origin main
    ```
+<<<<<<< HEAD
 2. On Render Dashboard ([render.com](https://render.com)):
    - Click **New** -> **Web Service**.
    - Connect your GitHub repository.
@@ -481,3 +575,25 @@ When demonstrating CampusHub 3.0 to your Web Technology faculty:
 
 **Q6: What is a Mongoose schema and model?**
 > *Answer:* A Mongoose schema defines the structure, data types, required fields, and validation rules of documents in a collection (e.g., `User.js`, `Event.js`). A Mongoose model is a compiled wrapper on the schema providing an interface to query, create, update, and delete documents in MongoDB.
+=======
+2. Start the Node.js server using npm:
+   ```bash
+   npm start
+   ```
+   *(Alternatively: `node server/server.js`)*
+3. You will see the server startup confirmation:
+   ```text
+   ====================================================
+    CampusHub Server is running on: http://localhost:3000
+    - Static files served from: .../CampusHub
+    - Registration endpoint: POST http://localhost:3000/api/register
+    - Registrations list:    GET  http://localhost:3000/api/registrations
+   ====================================================
+   ```
+4. Open your browser and navigate to:
+   **[http://localhost:3000](http://localhost:3000)** (or [http://localhost:3000/register.html](http://localhost:3000/register.html))
+
+---
+
+
+>>>>>>> 60de5dab5c216d2aad9cf4195abb3abbe07d0ba3
