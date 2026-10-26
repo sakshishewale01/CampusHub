@@ -1,0 +1,369 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { api } from '../services/api';
+
+export default function StudentDashboard({ user, onUpdateUser, onLogout, onShowToast }) {
+  const navigate = useNavigate();
+
+  const [registrations, setRegistrations] = useState([]);
+  const [stats, setStats] = useState({ totalEvents: 0, myRegistrationsCount: 0 });
+  const [loading, setLoading] = useState(true);
+
+  // Profile Edit State
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profileName, setProfileName] = useState(user?.name || user?.fullName || '');
+  const [profileCollegeId, setProfileCollegeId] = useState(user?.collegeId || '');
+  const [profileYear, setProfileYear] = useState(user?.yearOfStudy || '3rd Year');
+  const [profileMsg, setProfileMsg] = useState({ text: '', type: '' });
+  const [savingProfile, setSavingProfile] = useState(false);
+
+  // Load dashboard data
+  const loadDashboardData = async () => {
+    setLoading(true);
+    try {
+      const [regsData, statsData] = await Promise.all([
+        api.getMyRegistrations().catch(() => ({ registrations: [] })),
+        api.getStudentStats().catch(() => ({ stats: { totalEvents: 0, myRegistrationsCount: 0 } }))
+      ]);
+
+      setRegistrations(regsData.registrations || []);
+      if (statsData && statsData.stats) {
+        setStats(statsData.stats);
+      }
+    } catch (err) {
+      console.error('Error loading dashboard data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setProfileName(user.name || user.fullName || '');
+      setProfileCollegeId(user.collegeId || '');
+      setProfileYear(user.yearOfStudy || '3rd Year');
+    }
+  }, [user]);
+
+  // Cancel Registration Handler
+  const handleCancel = async (regId, eventTitle) => {
+    const confirmed = window.confirm(`Are you sure you want to cancel your registration for "${eventTitle}"? Your seat will be made available for other students.`);
+    if (!confirmed) return;
+
+    try {
+      const res = await api.cancelRegistration(regId);
+      if (res && res.success) {
+        onShowToast(res.message || 'Registration cancelled.', 'success');
+        await loadDashboardData();
+      }
+    } catch (err) {
+      onShowToast(err.message || 'Could not cancel registration.', 'error');
+    }
+  };
+
+  // Profile Update Handler
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+
+    if (!profileName.trim() || profileName.trim().length < 2) {
+      setProfileMsg({ text: 'Full name must contain at least 2 characters.', type: 'error' });
+      return;
+    }
+
+    if (!profileCollegeId.trim() || profileCollegeId.trim().length < 2) {
+      setProfileMsg({ text: 'College ID must contain at least 2 characters.', type: 'error' });
+      return;
+    }
+
+    setSavingProfile(true);
+    setProfileMsg({ text: '', type: '' });
+
+    try {
+      const res = await api.updateProfile({
+        name: profileName.trim(),
+        collegeId: profileCollegeId.trim(),
+        yearOfStudy: profileYear
+      });
+
+      if (res && res.success) {
+        onUpdateUser(res.user);
+        setIsEditingProfile(false);
+        onShowToast('Profile updated successfully!', 'success');
+      }
+    } catch (err) {
+      setProfileMsg({ text: err.message || 'Failed to update profile.', type: 'error' });
+    } finally {
+      setSavingProfile(false);
+    }
+  };
+
+  const handleLogoutClick = async () => {
+    await onLogout();
+    navigate('/');
+  };
+
+  const confirmedCount = registrations.filter((r) => r.status === 'Confirmed').length;
+
+  return (
+    <main>
+      {/* ============ DASHBOARD HEADER ============ */}
+      <section className="dashboard-header">
+        <div className="container">
+          <div className="dashboard-user-bar">
+            <div>
+              <span className="section-tag" style={{ background: 'rgba(255,255,255,0.15)', color: '#818cf8' }}>
+                Student Portal
+              </span>
+              <h1>Welcome, {user?.name || user?.fullName || 'Student'}!</h1>
+              <p>
+                {user?.yearOfStudy || '3rd Year'} • {user?.collegeId || 'CS Student'} • {user?.email}
+              </p>
+            </div>
+            <div className="dashboard-actions">
+              <Link to="/events" className="btn btn-primary btn-small">
+                Explore Events
+              </Link>
+              <button type="button" className="btn btn-outline-light btn-small" onClick={handleLogoutClick}>
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ MAIN DASHBOARD CONTENT ============ */}
+      <div className="container">
+        {/* Metric Stats Grid */}
+        <div className="stats-grid-dashboard">
+          <div className="dashboard-stat-card">
+            <div className="dashboard-stat-icon green">📅</div>
+            <div className="dashboard-stat-info">
+              <h3>{stats.totalEvents || 0}</h3>
+              <p>Total Events Available</p>
+            </div>
+          </div>
+          <div className="dashboard-stat-card">
+            <div className="dashboard-stat-icon">🎟️</div>
+            <div className="dashboard-stat-info">
+              <h3>{confirmedCount}</h3>
+              <p>Active Registrations</p>
+            </div>
+          </div>
+          <div className="dashboard-stat-card">
+            <div className="dashboard-stat-icon purple">🎓</div>
+            <div className="dashboard-stat-info">
+              <h3>{user?.yearOfStudy || '3rd Year'}</h3>
+              <p>Year of Study</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="dashboard-grid">
+          {/* Left Column: Registered Events */}
+          <div>
+            <div className="dashboard-card">
+              <div className="dashboard-card-header">
+                <h2>My Registered Events</h2>
+                <span className="badge-seats">{confirmedCount} Confirmed</span>
+              </div>
+
+              {loading ? (
+                <div className="empty-state">
+                  <p>Loading your event registrations...</p>
+                </div>
+              ) : registrations.length === 0 ? (
+                <div className="empty-state">
+                  <span className="empty-state-icon">🎟️</span>
+                  <h3>No event registrations yet</h3>
+                  <p>You haven't registered for any campus events yet. Explore upcoming hackathons, sports meets, and workshops!</p>
+                  <Link to="/events" className="btn btn-primary btn-small">
+                    Explore Upcoming Events
+                  </Link>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {registrations.map((reg) => {
+                    const isConfirmed = reg.status === 'Confirmed';
+                    const statusClass = isConfirmed ? 'confirmed' : 'cancelled';
+
+                    return (
+                      <div
+                        key={reg.id || reg._id}
+                        style={{
+                          background: '#fff',
+                          border: '1px solid var(--border-color)',
+                          borderRadius: 'var(--radius-sm)',
+                          padding: '18px 20px',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          flexWrap: 'wrap',
+                          gap: '14px',
+                          boxShadow: '0 1px 4px rgba(0,0,0,0.04)'
+                        }}
+                      >
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                            <span className="event-tag" style={{ margin: 0, fontSize: '0.72rem' }}>
+                              {reg.eventCategory || 'General'}
+                            </span>
+                            <span className={`badge-status ${statusClass}`}>{reg.status}</span>
+                          </div>
+                          <h4 style={{ fontSize: '1.15rem', color: 'var(--dark)', marginBottom: '6px' }}>
+                            {reg.eventTitle}
+                          </h4>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                            <span>📅 {reg.eventDate || 'TBA'}</span>
+                            <span>📍 {reg.eventVenue || 'Campus'}</span>
+                            <span>🕒 Registered: {reg.registeredAt || 'Recent'}</span>
+                          </div>
+                        </div>
+
+                        <div>
+                          {isConfirmed ? (
+                            <button
+                              type="button"
+                              className="btn-action btn-action-danger"
+                              onClick={() => handleCancel(reg.id || reg._id, reg.eventTitle)}
+                            >
+                              Cancel Registration
+                            </button>
+                          ) : (
+                            <span style={{ fontSize: '0.82rem', color: 'var(--text-light)', fontStyle: 'italic' }}>
+                              Cancelled
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right Column: Profile & Assistance */}
+          <div>
+            {/* Student Profile Card */}
+            <div className="dashboard-card">
+              <div className="dashboard-card-header">
+                <h3>Student Profile</h3>
+                {!isEditingProfile && (
+                  <button
+                    type="button"
+                    className="btn-action btn-action-edit"
+                    onClick={() => setIsEditingProfile(true)}
+                  >
+                    Edit Profile
+                  </button>
+                )}
+              </div>
+
+              {!isEditingProfile ? (
+                <div>
+                  <div style={{ marginBottom: '14px' }}>
+                    <label style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-light)', fontWeight: '700' }}>Full Name</label>
+                    <p style={{ fontSize: '1.05rem', fontWeight: '600', color: 'var(--dark)' }}>{user?.name || user?.fullName || '-'}</p>
+                  </div>
+                  <div style={{ marginBottom: '14px' }}>
+                    <label style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-light)', fontWeight: '700' }}>Email Address</label>
+                    <p style={{ fontSize: '0.95rem', color: 'var(--text-main)' }}>{user?.email || '-'}</p>
+                  </div>
+                  <div style={{ marginBottom: '14px' }}>
+                    <label style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-light)', fontWeight: '700' }}>College ID</label>
+                    <p style={{ fontSize: '0.95rem', fontWeight: '600', color: 'var(--text-main)' }}>{user?.collegeId || '-'}</p>
+                  </div>
+                  <div style={{ marginBottom: '14px' }}>
+                    <label style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-light)', fontWeight: '700' }}>Year of Study</label>
+                    <p style={{ fontSize: '0.95rem', color: 'var(--text-main)' }}>{user?.yearOfStudy || '3rd Year'}</p>
+                  </div>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-light)', fontWeight: '700' }}>Account Status</label>
+                    <p><span className="badge-status confirmed">Active Student</span></p>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSaveProfile} novalidate="true">
+                  <div className="form-group" style={{ marginBottom: '14px' }}>
+                    <label htmlFor="edit-name">Full Name</label>
+                    <input
+                      type="text"
+                      id="edit-name"
+                      value={profileName}
+                      onChange={(e) => setProfileName(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group" style={{ marginBottom: '14px' }}>
+                    <label htmlFor="edit-id">College ID</label>
+                    <input
+                      type="text"
+                      id="edit-id"
+                      value={profileCollegeId}
+                      onChange={(e) => setProfileCollegeId(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group" style={{ marginBottom: '18px' }}>
+                    <label htmlFor="edit-year-select">Year of Study</label>
+                    <select
+                      id="edit-year-select"
+                      value={profileYear}
+                      onChange={(e) => setProfileYear(e.target.value)}
+                      required
+                    >
+                      <option value="1st Year">1st Year</option>
+                      <option value="2nd Year">2nd Year</option>
+                      <option value="3rd Year">3rd Year</option>
+                      <option value="4th Year">4th Year</option>
+                      <option value="Post-Graduate">Post-Graduate</option>
+                    </select>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button type="submit" className="btn btn-primary btn-small" disabled={savingProfile}>
+                      {savingProfile ? 'Saving...' : 'Save Changes'}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-small"
+                      onClick={() => {
+                        setIsEditingProfile(false);
+                        setProfileMsg({ text: '', type: '' });
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+
+                  {profileMsg.text && (
+                    <p className={`form-message ${profileMsg.type}`} style={{ marginTop: '10px' }}>
+                      {profileMsg.text}
+                    </p>
+                  )}
+                </form>
+              )}
+            </div>
+
+            {/* Assistance Card */}
+            <div className="dashboard-card" style={{ background: '#f8fafc' }}>
+              <h3 style={{ fontSize: '1.1rem', marginBottom: '10px' }}>Campus Guidelines</h3>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-light)', lineHeight: '1.5', marginBottom: '14px' }}>
+                Registrations can be cancelled directly from your dashboard prior to the event schedule. When cancelled, your seat is instantly released for fellow students.
+              </p>
+              <Link to="/about" className="btn btn-outline-dark btn-small btn-block" style={{ border: '1px solid var(--border-color)', textAlign: 'center' }}>
+                Learn More
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}

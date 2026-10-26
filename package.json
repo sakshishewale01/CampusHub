@@ -5,7 +5,11 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
-    "dev": "node --watch server/server.js"
+    "build": "npm --prefix client install && npm --prefix client run build",
+    "dev": "node server/server.js",
+    "server": "node --watch server/server.js",
+    "client": "npm --prefix client run dev",
+    "test": "node tests/mern_test_suite.js"
   },
   "keywords": [
     "campushub",
@@ -15,5 +19,14 @@
     "vanilla-javascript"
   ],
   "author": "Sakshi Shewale",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "connect-mongo": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "express-session": "^1.19.0",
+    "mongoose": "^9.11.4"
+  }
 }

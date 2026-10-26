@@ -62,8 +62,17 @@
             <a href="#" class="forgot-link">Forgot Password?</a>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-block">Login</button>
+          <button type="submit" class="btn btn-primary btn-block" id="login-submit-btn">Login</button>
           <p class="form-message" id="login-message" role="status" aria-live="polite"></p>
+
+          <!-- Quick Demo Credentials Fill (For Faculty Demonstration) -->
+          <div style="margin-top: 18px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px dashed var(--border-color); font-size: 0.85rem;">
+            <p style="font-weight: 700; color: var(--text-main); margin-bottom: 8px; text-align: center;">⚡ Quick Demo Login (Click to Fill):</p>
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+              <button type="button" class="btn-action btn-action-edit" id="fill-student-btn" title="Fill Sakshi Shewale Demo Account">Student Demo</button>
+              <button type="button" class="btn-action btn-action-edit" id="fill-admin-btn" style="background: #fef3c7; color: #b45309;" title="Fill Admin Demo Account">Admin Demo</button>
+            </div>
+          </div>
         </form>
 
         <div class="auth-divider">New to CampusHub</div>
@@ -84,6 +93,7 @@
     </div>
   </footer>
 
+  <script src="js/navbar.js"></script>
   <script src="js/login.js"></script>
 </body>
 </html>
