@@ -163,9 +163,9 @@ async function connectDB() {
   }
 
   try {
-    console.log('[MongoDB] Connecting to MongoDB Atlas...');
-    await mongoose.connect(uri);
-    console.log('[MongoDB] Connected successfully to MongoDB Atlas.');
+    console.log('[MongoDB] Connecting to database...');
+    await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
+    console.log('[MongoDB] Connected successfully to database.');
 
     // Seed data on startup
     await seedInitialData();

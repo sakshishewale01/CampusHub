@@ -7,11 +7,13 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const ConnectMongo = require('connect-mongo');
+const MongoStore = ConnectMongo.create ? ConnectMongo : (ConnectMongo.MongoStore || ConnectMongo.default);
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 
+const mongoose = require('mongoose');
 const { connectDB } = require('./config/db');
 
 const authRoutes = require('./routes/authRoutes');
@@ -89,6 +91,18 @@ app.get('/api/health', (req, res) => {
     uptime: Math.floor(process.uptime()),
     timestamp: new Date().toISOString()
   });
+});
+
+// Middleware: Verify MongoDB connection before processing database routes
+app.use('/api', (req, res, next) => {
+  if (req.path === '/health') return next();
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      success: false,
+      message: 'Database is not connected. Please verify that MongoDB is running or update MONGODB_URI in your .env file.'
+    });
+  }
+  next();
 });
 
 app.use('/api/auth', authRoutes);
