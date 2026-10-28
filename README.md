@@ -1,257 +1,173 @@
-# CampusHub — College Event Management Platform
+# CampusHub 🎓
 
-CampusHub is a full-featured college event management web application.
+### College Event Management Platform
 
----
+CampusHub is a web application that helps college students explore campus events and register for them online. It also provides an admin dashboard to manage events and view student registrations.
 
-## 5. Project Folder Structure
+## ✨ Features
+
+- **Student Registration and Login** – Students can create accounts and log in.
+- **Browse Events** – View upcoming college events.
+- **Search and Filter** – Find events by name or category.
+- **Event Registration** – Register for events online.
+- **Student Dashboard** – View registered events and manage bookings.
+- **Admin Dashboard** – Create, update, and delete events.
+- **Manage Registrations** – Admins can view event registrations.
+- **Protected Routes** – Separate access for students and admins.
+- **Responsive Design** – Use the application on different screen sizes.
+
+## 🛠️ Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| React.js | Builds the user interface |
+| Vite | Runs and builds the frontend |
+| Node.js | Runs JavaScript on the server |
+| Express.js | Handles backend routes and API requests |
+| MongoDB | Stores application data |
+| Mongoose | Connects Node.js with MongoDB |
+| CSS | Styles the application |
+| Git and GitHub | Version control and code hosting |
+
+## 📁 Project Structure
 
 ```text
 CampusHub/
-│
-├── client/                     # Frontend: React + Vite Single Page Application
-│   ├── public/                 # Static assets (images, icons)
+├── client/                 # React frontend
+│   ├── public/
 │   ├── src/
-│   │   ├── components/         # Reusable UI components
-│   │   │   ├── Navbar.jsx      # Role-aware navigation with user badges
-│   │   │   ├── Footer.jsx      # Reusable footer
-│   │   │   ├── ProtectedRoute.jsx # Client-side route guard (Student / Admin)
-│   │   │   └── EventModal.jsx  # Event details modal with 1-click booking
-│   │   ├── pages/              # Main page views
-│   │   │   ├── Home.jsx        # Landing page (hero, highlights, categories)
-│   │   │   ├── Events.jsx      # Dynamic catalog (search, filter, sort)
-│   │   │   ├── About.jsx       # Mission, purpose, 4-step workflow
-│   │   │   ├── Login.jsx       # Auth form with quick-fill demo buttons
-│   │   │   ├── Register.jsx    # Student account registration form
-│   │   │   ├── StudentDashboard.jsx # Student portal (my events, cancel, profile)
-│   │   │   └── AdminDashboard.jsx   # Admin panel (event CRUD, registrations)
-│   │   ├── services/
-│   │   │   └── api.js          # Fetch API service wrapper with credentials
-│   │   ├── styles/
-│   │   │   └── style.css       # Preserved design tokens, cards, and animations
-│   │   ├── App.jsx             # Root React component and routing setup
-│   │   ├── index.css           # Global stylesheet imported into React
-│   │   └── main.jsx            # React root DOM entry point
-│   ├── package.json            # Client dependencies (React, react-router-dom, Vite)
-│   └── vite.config.js          # Vite config with /api development proxy
+│   │   ├── components/     # Reusable components
+│   │   ├── pages/          # Application pages
+│   │   ├── services/       # API communication
+│   │   ├── styles/         # CSS styles
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   └── package.json
 │
-├── server/                     # Backend: Node.js + Express + MongoDB
-│   ├── config/
-│   │   └── db.js               # Mongoose connection & initial seed logic
-│   ├── models/                 # Mongoose Data Models
-│   │   ├── User.js             # Student and Admin schema (bcrypt hashes)
-│   │   ├── Event.js            # Campus event schema with capacity
-│   │   └── Registration.js     # Event booking schema with User & Event refs
-│   ├── routes/                 # Express REST API Route Handlers
-│   │   ├── authRoutes.js       # Register, login, logout, me, profile
-│   │   ├── eventRoutes.js      # Public event catalog with live seat math
-│   │   ├── registrationRoutes.js # Event bookings, cancellations, student stats
-│   │   └── adminRoutes.js      # Event CRUD, registrations table, admin stats
-│   ├── middleware/
-│   │   └── authMiddleware.js   # requireAuth, requireStudent, requireAdmin
-│   └── server.js               # Express application entry & React static serving
+├── server/                 # Node.js and Express backend
+│   ├── config/             # Database connection
+│   ├── models/             # MongoDB data models
+│   ├── routes/             # API routes
+│   ├── middleware/         # Authentication checks
+│   └── server.js
 │
-├── tests/
-│   └── mern_test_suite.js      # Automated test suite (45 verification checks)
-│
-├── .env.example                # Template for environment configuration
-├── .env                        # Local environment variables (ignored by Git)
-├── .gitignore                  # Git ignore rules for node_modules, build, .env
-├── package.json                # Root scripts (build, start, server, client, test)
-└── README.md                   # Comprehensive documentation and viva preparation
+├── tests/                  # Automated tests
+├── .env.example            # Example environment variables
+├── .gitignore
+├── package.json
+└── README.md
 ```
 
----
+## ⚙️ How to Run the Project
 
-## 📄 File Overview
+### 1. Install Node.js
 
-| File / Folder | Purpose |
-|---|---|
-| `index.html` | Landing page with navbar, hero section, featured highlights, category cards, statistics, and footer. |
-| `events.html` | Events listing page with real-time search, category filter chips, sorting dropdown, live counter, and interactive event details modal. |
-| `login.html` | Student login page featuring client-side required field and email format validation with dynamic error/success feedback. |
-| `register.html` | Student registration page featuring form inputs, event dropdown, live validation feedback, and stored registrations preview. |
-| `about.html` | About page detailing CampusHub's mission, features, and how it works. |
-| `css/style.css` | Comprehensive shared stylesheet defining CSS variables (`:root`), Flexbox, CSS Grid layouts, card styles, form styling, modal dialogs, and media queries. |
-| `js/events.js` | Client-side JavaScript handling search, category filtering, sorting by date or name, count updates, and modal popup interactions. |
-| `js/login.js` | Client-side JavaScript handling login validation. |
-| `js/register.js` | Client-side JavaScript handling registration form validation and asynchronous `fetch()` submission to the Node.js backend. |
-| `server/server.js` | Node.js HTTP server created using `http.createServer()` without any external frameworks. Handles static file delivery, request body parsing, server-side validation, duplicate email detection, password hashing, and JSON file storage. |
-| `server/data/registrations.json` | JSON file storing validated student registration records on the server. |
-| `package.json` | Defines project metadata and `npm start` script (`node server/server.js`). |
+Download Node.js from [nodejs.org](https://nodejs.org/).
 
----
+Check that Node.js and npm are installed:
 
-## 🛠️ Software and Technologies Used
+```bash
+node -v
+npm -v
+```
 
-- **Frontend:**
-  - **HTML5:** Semantic layout tags (`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`).
-  - **CSS3:** Custom properties (`:root`), Flexbox, CSS Grid, smooth transitions, and responsive media queries.
-  - **Vanilla JavaScript:** DOM manipulation, event listeners, array methods, JSON parsing/stringification, and the `fetch()` API.
-- **Backend (Assignment 3):**
-  - **Node.js:** JavaScript runtime environment.
-  - **`http` Module (Built-in):** Low-level HTTP server created with `http.createServer()`.
-  - **`fs` Module (Built-in):** Synchronous and stream-based file reading/writing for serving static files and updating `registrations.json`.
-  - **`path` Module (Built-in):** Path resolution and security checks to prevent directory traversal.
-  - **`crypto` Module (Built-in):** PBKDF2 password-based key derivation (`crypto.pbkdf2Sync`) with 16-byte random salts (`crypto.randomBytes`) for secure password hashing.
-  - **Zero External Backend Frameworks:** No Express.js, MongoDB, or third-party middleware used.
+### 2. Download the Project
 
----
+Clone the repository:
 
-## 💡 Client-Side vs Server-Side Validation: What is the Difference?
+```bash
+git clone https://github.com/sakshishewale01/CampusHub.git
+cd CampusHub
+```
 
-| Feature | Client-Side Validation (Browser) | Server-Side Validation (Node.js) |
-|---|---|---|
-| **Where it runs** | In the user's browser via JavaScript (`js/register.js`). | On the Node.js web server (`server/server.js`). |
-| **Purpose** | Instant user feedback; prevents unnecessary network calls and guides user formatting. | Final authority and security; ensures data integrity even if the client is compromised or bypassed. |
-| **Can it be bypassed?** | **Yes.** Anyone can disable JavaScript, use Postman, curl, or modify browser memory. | **No.** Every request reaching the API endpoint is independently validated regardless of its origin. |
-| **Duplicate check** | Limited to client cache or previously fetched list. | Authoritative; checks the central server record repository (`registrations.json`). |
-| **Password security** | Checks format/length; must never store plain-text passwords. | Hashes password securely using PBKDF2 with salt before saving to disk. |
+### 3. Install Dependencies
 
----
+Install the root dependencies:
 
-## ⚙️ Server-Side Validation Rules (`server/server.js`)
+```bash
+npm install
+```
 
-Before any registration record is accepted or saved to `server/data/registrations.json`, the server independently enforces:
+Install the frontend dependencies:
 
-1. **Full Name:**
-   - Must be a string.
-   - Must not be empty or contain only whitespace.
-   - Must be at least 2 characters long after trimming.
-   - *Error:* `"Please enter your full name (minimum 2 characters)."` (Status: `400 Bad Request`)
-2. **Email Address:**
-   - Must be a string.
-   - Must follow a valid email pattern (`/^[^\s@]+@[^\s@]+\.[^\s@]+$/`).
-   - Converted to lowercase for consistent case-insensitive comparison.
-   - *Error:* `"Please enter a valid email address."` (Status: `400 Bad Request`)
-3. **College ID:**
-   - Must be a non-empty string after trimming.
-   - *Error:* `"Please enter your College ID."` (Status: `400 Bad Request`)
-4. **Selected Event:**
-   - Must be a non-empty string.
-   - *Error:* `"Please select an event to register for."` (Status: `400 Bad Request`)
-5. **Password Length:**
-   - Must be a string with a minimum length of 8 characters.
-   - *Error:* `"Password must contain at least 8 characters."` (Status: `400 Bad Request`)
-6. **Password Confirmation:**
-   - If `confirmPassword` is submitted, it must strictly match `password`.
-   - *Error:* `"Passwords do not match."` (Status: `400 Bad Request`)
-7. **Duplicate Account Prevention:**
-   - The email is checked against all existing records in `registrations.json`.
-   - If an account already exists with that email:
-   - *Error:* `"An account with this email already exists."` (Status: `409 Conflict`)
-8. **Security & Password Hashing:**
-   - Passwords are **never stored in plain text**.
-   - A unique 16-byte random salt is generated for each registration.
-   - The password is hashed using PBKDF2 (100,000 iterations of SHA-512).
-   - Only the `salt` and `passwordHash` are saved in `registrations.json`.
-   - API responses **never return** passwords, salts, or hashes.
+```bash
+cd client
+npm install
+cd ..
+```
 
----
+Install the backend dependencies if the server has its own `package.json`:
 
-## 📡 API Endpoints
+```bash
+cd server
+npm install
+cd ..
+```
 
-### 1. `POST /api/register`
-- **Description:** Validates and registers a new student for an event.
-- **Request Headers:** `Content-Type: application/json`
-- **Request Body Format:**
-  ```json
-  {
-    "fullName": "Sakshi Shewale",
-    "email": "sakshi@college.edu",
-    "collegeId": "CS2026045",
-    "selectedEvent": "Code Sprint Hackathon",
-    "password": "Password123!",
-    "confirmPassword": "Password123!"
-  }
-  ```
-- **Response — 201 Created (Success):**
-  ```json
-  {
-    "success": true,
-    "message": "Registration successful! Your registration has been validated and recorded.",
-    "registration": {
-      "id": 1728775600000,
-      "fullName": "Sakshi Shewale",
-      "email": "sakshi@college.edu",
-      "collegeId": "CS2026045",
-      "selectedEvent": "Code Sprint Hackathon",
-      "registrationDate": "13 Oct 2026"
-    }
-  }
-  ```
-- **Response — 400 Bad Request (Validation Failure):**
-  ```json
-  {
-    "success": false,
-    "message": "Password must contain at least 8 characters."
-  }
-  ```
-- **Response — 409 Conflict (Duplicate Email):**
-  ```json
-  {
-    "success": false,
-    "message": "An account with this email already exists."
-  }
-  ```
-- **Response — 405 Method Not Allowed:**
-  Returned if an HTTP method other than `POST` is sent to `/api/register`.
+### 4. Configure Environment Variables
 
-### 2. `GET /api/registrations`
-- **Description:** Returns a list of public, sanitized registration records (omits password hashes and salts).
-- **Response — 200 OK:**
-  ```json
-  {
-    "success": true,
-    "count": 1,
-    "registrations": [
-      {
-        "id": 1728775600000,
-        "fullName": "Sakshi Shewale",
-        "email": "sakshi@college.edu",
-        "collegeId": "CS2026045",
-        "selectedEvent": "Code Sprint Hackathon",
-        "registrationDate": "13 Oct 2026"
-      }
-    ]
-  }
-  ```
+Create a `.env` file in the location expected by your backend configuration.
 
----
+For example:
 
-## ▶️ How to Install and Run Locally
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+```
 
-### Prerequisites
-- Node.js (version 16 or newer recommended).
-- Check your installation by opening a terminal and running:
-  ```bash
-  node -v
-  ```
+Replace the example database value with your own MongoDB connection string. Never upload your real `.env` file or database password to GitHub.
 
-### Starting the Server
-1. Open the project folder in VS Code or your terminal:
-   ```bash
-   cd CampusHub
-   ```
-2. Start the Node.js server using npm:
-   ```bash
-   npm start
-   ```
-   *(Alternatively: `node server/server.js`)*
-3. You will see the server startup confirmation:
-   ```text
-   ====================================================
-    CampusHub Server is running on: http://localhost:3000
-    - Static files served from: .../CampusHub
-    - Registration endpoint: POST http://localhost:3000/api/register
-    - Registrations list:    GET  http://localhost:3000/api/registrations
-   ====================================================
-   ```
-4. Open your browser and navigate to:
-   **[http://localhost:3000](http://localhost:3000)** (or [http://localhost:3000/register.html](http://localhost:3000/register.html))
+### 5. Start the Application
 
----
+Run the frontend and backend using the scripts configured in your project's `package.json` files.
 
----
-#   C a m p u s H u b  
- 
+For example, if the root scripts support these commands, open separate terminals and run:
+
+**Backend:**
+
+```bash
+cd server
+npm run dev
+```
+
+**Frontend:**
+
+```bash
+cd client
+npm run dev
+```
+
+Open the local URL shown by Vite in your terminal, usually `http://localhost:5173`.
+
+*Note: The exact commands and ports depend on your project's configuration.*
+
+## 🗄️ Database
+
+CampusHub uses MongoDB to store application data.
+
+The main data models are:
+
+- **User:** Stores student and admin account information.
+- **Event:** Stores event details, dates, categories, and capacity.
+- **Registration:** Stores student event bookings and related information.
+
+Mongoose is used to interact with the database.
+
+## 🔐 Authentication and Authorization
+
+CampusHub supports separate student and admin roles.
+
+- Students can browse events and manage their registrations.
+- Admins can manage events and view registrations.
+- Protected backend routes check whether the user has permission to perform an action.
+- Passwords should be securely hashed before being stored.
+
+## 🚀 Deployment
+
+The frontend can be deployed on [Vercel](https://vercel.com/).
+
+For a full-stack deployment, configure the backend API, MongoDB connection, environment variables, and frontend API URL correctly. The Express backend must also be deployed to a runtime that supports it.
+
+## 🎯 Project Objective
+
+The main objective of CampusHub is to make college event management easier by providing one platform where students can discover events and admins can manage event information and registrations.
